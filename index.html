@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Além do RGB | Computação Visual</title>
+<style>
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #334155;
+  font-family: "Segoe UI", Arial, sans-serif;
+  line-height: 1.8;
+}
+header {
+  background: #0f172a;
+  color: white;
+  padding: 20px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo { font-size: 21px; font-weight: 700; }
+nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-left: 20px;
+}
+nav a:hover { color: white; }
+.hero {
+  background: linear-gradient(135deg,#172554,#2563eb);
+  color: white;
+  text-align: center;
+  padding: 90px 20px 105px;
+}
+.hero-inner { max-width: 850px; margin: auto; }
+.tag-top {
+  display: inline-block;
+  background: #ffffff24;
+  padding: 7px 17px;
+  border-radius: 25px;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+h1 {
+  font-size: clamp(32px,5vw,49px);
+  line-height: 1.2;
+  margin: 22px 0;
+}
+.hero p { color: #dbeafe; font-size: 18px; }
+.post-info {
+  max-width: 850px;
+  margin: -35px auto 0;
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: 20px 28px;
+  box-shadow: 0 8px 25px #00000012;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.autor { display: flex; align-items: center; gap: 13px; }
+.avatar {
+  background: #2563eb;
+  color: white;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+}
+.autor strong { display: block; color: #0f172a; }
+.autor small, .tempo { color: #64748b; }
+main { max-width: 850px; margin: 48px auto; padding: 0 20px; }
+article {
+  background: white;
+  padding: 52px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px #0000000a;
+}
+h2 {
+  color: #172554;
+  font-size: 27px;
+  line-height: 1.35;
+  margin: 42px 0 20px;
+}
+h2::after {
+  content: "";
+  display: block;
+  width: 45px;
+  height: 4px;
+  background: #2563eb;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+p { font-size: 16.5px; margin-bottom: 20px; }
+strong { color: #1e40af; }
+.destaque {
+  background: #eff6ff;
+  border-left: 5px solid #2563eb;
+  padding: 22px 25px;
+  border-radius: 7px;
+  margin: 30px 0;
+}
+.destaque p { margin: 0; color: #1e3a8a; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 15px;
+  margin: 28px 0;
+}
+.card {
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+.card h3 { color: #1e40af; margin: 0 0 8px; }
+.card p { font-size: 14px; margin: 0; }
+.espectro {
+  display: flex;
+  height: 42px;
+  border-radius: 9px;
+  overflow: hidden;
+  margin-top: 22px;
+}
+.espectro .visivel {
+  width: 40%;
+  background: linear-gradient(to right,
+    #7c3aed,#2563eb,#22c55e,#eab308,#ef4444);
+}
+.espectro .infra {
+  width: 60%;
+  background: linear-gradient(to right,#991b1b,#581c87,#312e81);
+}
+.legenda {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #64748b;
+}
+.formula {
+  background: #0f172a;
+  color: #93c5fd;
+  padding: 27px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 25px 0;
+}
+.formula small {
+  display: block;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: normal;
+  margin-top: 10px;
+}
+.tags {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 25px;
+  margin-top: 40px;
+}
+.tags span {
+  display: inline-block;
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 5px 13px;
+  border-radius: 20px;
+  margin: 5px;
+  font-size: 13px;
+}
+footer {
+  background: #0f172a;
+  color: #94a3b8;
+  text-align: center;
+  padding: 32px;
+}
+footer strong { color: white; }
+@media(max-width:700px) {
+  header { flex-direction: column; gap: 12px; }
+  nav a { margin: 0 7px; font-size: 13px; }
+  .post-info { margin-left: 15px; margin-right: 15px; }
+  .tempo { display: none; }
+  article { padding: 28px 22px; }
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Computação Visual</div>
+  <nav>
+    <a href="#inicio">Início</a>
+    <a href="#espectro">Espectro</a>
+    <a href="#aplicacoes">Aplicações</a>
+    <a href="#reflexao">Reflexão</a>
+  </nav>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="hero-inner">
+    <span class="tag-top">COMPUTAÇÃO VISUAL • POST #04</span>
+    <h1>Além do RGB: como os computadores enxergam
+    cores invisíveis ao olho humano?</h1>
+    <p>
+      Explorando imagens multiespectrais e hiperespectrais
+      e como elas revelam informações que não conseguimos
+      perceber naturalmente.
+    </p>
+  </div>
+</section>
+
+<section class="post-info">
+  <div class="autor">
+    <div class="avatar">LC</div>
+    <div>
+      <strong>Luis Felipe Cunha</strong>
+      <small>27 de outubro de 2026</small>
+    </div>
+  </div>
+  <span class="tempo"> 6 min de leitura</span>
+</section>
+
+<main>
+<article>
+
+<section>
+<h2>Será que enxergamos todas as informações de uma imagem?</h2>
+
+<p>
+Durante a disciplina de Computação Visual, estudamos
+como a luz interage com os objetos, como os sensores
+capturam imagens e como essas informações são
+representadas digitalmente.
+</p>
+
+<p>
+Mas uma questão interessante surgiu ao relacionar
+esses conteúdos: <strong>será que tudo o que existe
+visualmente em uma cena pode ser percebido pelo olho
+humano?</strong>
+</p>
+
+<p>
+A resposta é não. Nossa visão consegue perceber apenas
+uma pequena faixa do espectro eletromagnético.
+Isso significa que existem informações presentes
+na luz refletida pelos objetos que simplesmente
+não conseguimos enxergar.
+</p>
+
+<p>
+É justamente nesse contexto que entram as
+<strong>imagens multiespectrais e hiperespectrais</strong>,
+que permitem analisar diferentes faixas do espectro
+e descobrir características invisíveis em
+fotografias convencionais.
+</p>
+
+<div class="destaque">
+<p>
+ <strong>Meu principal insight:</strong>
+um computador não precisa enxergar o mundo
+da mesma maneira que nós. Com sensores adequados,
+ele pode analisar informações que estão
+completamente fora da nossa percepção visual.
+</p>
+</div>
+</section>
+
+<section id="espectro">
+<h2>O limite da visão humana</h2>
+
+<p>
+Nossos olhos são sensíveis aproximadamente à faixa
+de 400 a 700 nanômetros do espectro eletromagnético,
+correspondente à luz visível.
+</p>
+
+<p>
+Entretanto, essa faixa representa apenas uma
+pequena parte de todas as radiações existentes.
+O infravermelho, por exemplo, possui comprimentos
+de onda maiores do que a luz vermelha visível.
+</p>
+
+<div class="espectro">
+  <div class="visivel"></div>
+  <div class="infra"></div>
+</div>
+<div class="legenda">
+  <span>400 nm • Visível</span>
+  <span>700 nm • Infravermelho →</span>
+</div>
+<p style="font-size:13px;color:#64748b">
+  Representação ilustrativa, não proporcional,
+  de faixas do espectro eletromagnético.
+</p>
+
+<p>
+Sensores especializados conseguem captar parte
+dessas radiações e transformá-las em dados digitais.
+Assim, uma imagem pode conter informações que
+não seriam percebidas por uma câmera convencional
+operando apenas com cores visíveis.
+</p>
+</section>
+
+<section>
+<h2>O que são imagens multiespectrais e hiperespectrais?</h2>
+
+<p>
+Uma fotografia colorida convencional geralmente
+é representada por três canais principais:
+vermelho, verde e azul, conhecidos como RGB.
+</p>
+
+<p>
+Já as imagens multiespectrais registram informações
+em várias bandas do espectro eletromagnético,
+que podem incluir regiões fora da luz visível.
+</p>
+
+<p>
+As imagens hiperespectrais levam essa ideia
+mais longe, registrando muitas bandas espectrais,
+geralmente estreitas e próximas umas das outras.
+</p>
+
+<div class="cards">
+  <div class="card">
+    <h3> RGB</h3>
+    <p>
+      Três canais de cor usados para representar
+      imagens convencionais.
+    </p>
+  </div>
+  <div class="card">
+    <h3> Multiespectral</h3>
+    <p>
+      Várias bandas selecionadas para captar
+      diferentes características de uma cena.
+    </p>
+  </div>
+  <div class="card">
+    <h3> Hiperespectral</h3>
+    <p>
+      Muitas bandas estreitas que permitem analisar
+      assinaturas espectrais detalhadas.
+    </p>
+  </div>
+</div>
+
+<p>
+O mais interessante é que dois materiais
+podem apresentar cores muito parecidas
+em uma fotografia RGB, mas responder
+de maneiras diferentes em outras faixas
+do espectro eletromagnético.
+</p>
+
+<div class="destaque">
+<p>
+ Isso significa que duas superfícies aparentemente
+iguais para nossos olhos podem ser diferenciadas
+computacionalmente por suas propriedades espectrais.
+</p>
+</div>
+</section>
+
+<section>
+<h2>Uma imagem pode ter muito mais que três dimensões</h2>
+
+<p>
+Na disciplina, aprendemos que uma imagem digital
+pode ser representada por uma matriz bidimensional,
+em que cada posição corresponde a um pixel.
+</p>
+
+<p>
+Entretanto, quando trabalhamos com imagens
+multiespectrais ou hiperespectrais, podemos
+acrescentar uma dimensão relacionada às bandas
+espectrais captadas pelo sensor.
+</p>
+
+<div class="formula">
+I(x, y, λ)
+<small>
+x e y = posição espacial | λ = comprimento de onda
+</small>
+</div>
+
+<p>
+Nesse caso, não estamos analisando somente
+a posição de um pixel, mas também como a
+energia registrada varia em diferentes
+comprimentos de onda.
+</p>
+
+<p>
+Essa estrutura pode ser entendida como um
+<strong>cubo de dados</strong>, contendo duas
+dimensões espaciais e uma dimensão espectral.
+</p>
+
+<p>
+Para mim, essa foi uma conexão muito interessante
+com o conteúdo de representação de imagens digitais:
+a mesma ideia de matriz que estudamos pode ser
+ampliada para armazenar informações muito mais ricas.
+</p>
+</section>
+
+<section id="aplicacoes">
+<h2>Onde essa tecnologia pode ser utilizada?</h2>
+
+<p>
+O que mais chama atenção é que esse tipo de
+processamento não fica limitado à computação gráfica.
+Ele possui aplicações em diversas áreas.
+</p>
+
+<div class="cards">
+  <div class="card">
+    <h3> Agricultura</h3>
+    <p>
+      Análise da saúde da vegetação, identificação
+      de estresse e monitoramento de plantações.
+    </p>
+  </div>
+  <div class="card">
+    <h3> Meio ambiente</h3>
+    <p>
+      Monitoramento de florestas, mudanças na
+      cobertura do solo e identificação de materiais.
+    </p>
+  </div>
+  <div class="card">
+    <h3> Indústria</h3>
+    <p>
+      Inspeção de produtos e identificação
+      de características de materiais.
+    </p>
+  </div>
+</div>
+
+<p>
+Um exemplo interessante está na agricultura.
+Uma plantação pode parecer saudável em uma
+fotografia convencional, mas determinadas
+alterações em sua resposta espectral podem
+indicar estresse antes que mudanças evidentes
+apareçam visualmente.
+</p>
+
+<p>
+Isso não significa que o sensor identifica
+automaticamente qualquer problema.
+É necessário interpretar os dados e utilizar
+métodos adequados de análise.
+</p>
+</section>
+
+<section>
+<h2>E onde entra a Inteligência Artificial?</h2>
+
+<p>
+Outra conexão que achei relevante é a relação
+dessas imagens com técnicas de
+<strong>Machine Learning e Visão Computacional</strong>.
+</p>
+
+<p>
+Como as imagens hiperespectrais podem conter
+uma grande quantidade de bandas, analisar
+manualmente todas essas informações seria
+uma tarefa complexa.
+</p>
+
+<p>
+Algoritmos de aprendizado de máquina podem
+ser treinados para identificar padrões espectrais,
+classificar materiais e detectar anomalias.
+</p>
+
+<p>
+Por exemplo, um modelo pode aprender diferenças
+entre tipos de vegetação a partir de amostras
+previamente identificadas, utilizando os valores
+espectrais como atributos de entrada.
+</p>
+
+<p>
+Isso também traz desafios, como a alta
+dimensionalidade dos dados, a necessidade
+de amostras de treinamento confiáveis e
+o custo computacional do processamento.
+</p>
+
+<div class="destaque">
+<p>
+ A Inteligência Artificial pode transformar
+grandes volumes de informações espectrais
+em classificações e previsões úteis,
+mas sua qualidade depende dos sensores,
+dos dados e do treinamento utilizado.
+</p>
+</div>
+</section>
+
+<section id="reflexao">
+<h2>Minha percepção sobre o tema</h2>
+
+<p>
+Ao pesquisar esse assunto, percebi que
+Computação Visual vai muito além da
+renderização de objetos ou da manipulação
+de imagens convencionais.
+</p>
+
+<p>
+Estudar imagens multiespectrais e hiperespectrais
+mostra que a representação visual também pode
+ser uma ferramenta de análise científica.
+</p>
+
+<p>
+O que mais me chamou atenção foi entender
+que <strong>uma imagem não precisa representar
+somente aquilo que o ser humano consegue enxergar</strong>.
+Ela pode representar informações físicas
+que exigem sensores especializados e métodos
+computacionais para serem interpretadas.
+</p>
+
+<p>
+Esse tema também conecta vários conteúdos
+que vimos na disciplina: espectro eletromagnético,
+refletância, sensores, aquisição de imagens,
+pixels e representação matemática.
+</p>
+
+<div class="destaque">
+<p>
+ <strong>Minha conclusão:</strong>
+a Computação Visual não serve apenas para
+reproduzir o mundo como nossos olhos o enxergam.
+Ela também pode ampliar nossa capacidade de
+observação, revelando padrões e características
+que normalmente permaneceriam invisíveis.
+</p>
+</div>
+</section>
+
+<section>
+<h2>Referências para aprofundamento</h2>
+<p>
+Gonzalez, R. C.; Woods, R. E.
+<em>Digital Image Processing</em>.
+</p>
+<p>
+NASA Earth Observatory —
+<a href="https://earthobservatory.nasa.gov/"
+target="_blank" rel="noopener noreferrer">
+Observação da Terra e imagens de satélite
+</a>.
+</p>
+<p>
+USGS Landsat Missions —
+<a href="https://www.usgs.gov/landsat-missions"
+target="_blank" rel="noopener noreferrer">
+Sensoriamento remoto multiespectral
+</a>.
+</p>
+</section>
+
+<div class="tags">
+  <span>#ComputaçãoVisual</span>
+  <span>#ImagensHiperespectrais</span>
+  <span>#VisãoComputacional</span>
+  <span>#MachineLearning</span>
+  <span>#ProcessamentoDeImagens</span>
+  <span>#CiênciaDaComputação</span>
+</div>
+
+</article>
+</main>
+
+<footer>
+  <strong>Blog de Computação Visual</strong>
+  <p>Ciência da Computação • 2026</p>
+</footer>
+
+</body>
+</html>
